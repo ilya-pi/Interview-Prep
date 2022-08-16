@@ -1,0 +1,52 @@
+package main
+
+import "fmt"
+
+const Capacity = 3
+
+type SetOfStacks[T comparable] [][]T
+
+func (s SetOfStacks[T]) push(v T) SetOfStacks[T] {
+	if len(s) == 0 {
+		s = append(s, []T{})
+	}
+	st := s[len(s)-1]
+	if len(st) >= Capacity {
+		s = append(s, []T{})
+		st = s[len(s)-1]
+	}
+	st = append(st, v)
+	s[len(s)-1] = st
+	return s
+}
+
+func (s SetOfStacks[T]) pop() (*T, SetOfStacks[T]) {
+	if len(s) == 0 {
+		return nil, s
+	}
+	st := s[len(s)-1]
+	res, st := st[len(st)-1], st[:len(st)-1]
+	s[len(s)-1] = st
+	if len(st) == 0 {
+		s = s[:len(s)-1]
+	}
+	return &res, s
+}
+
+func main() {
+	s := SetOfStacks[int]{}
+	s = s.push(1)
+	s = s.push(2)
+	s = s.push(3)
+	s = s.push(4)
+	s = s.push(5)
+	var v *int
+	for i := 0; i < 10; i++ {
+		v, s = s.pop()
+		if v != nil {
+			fmt.Printf("Result after pop: %v, array is %v\n", *v, s)
+		} else {
+			fmt.Printf("Result is %v, arrays is %v\n", v, s)
+		}
+	}
+}
