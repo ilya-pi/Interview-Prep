@@ -31,6 +31,7 @@ II System Design
 
 1. YouTube Videos
 
+5 hours of dynamic programming — https://www.youtube.com/watch?v=oBt53YbR9Kk 
 
 1. Behavioral questions
 
@@ -38,6 +39,7 @@ II System Design
 
 III Blogs
 
+[ ] https://careers.google.com/interview-tips/
 [ ] https://blog.pragmaticengineer.com/swift-the-only-modern-language-with-no-mocking-framework/
 [ ] https://blog.pragmaticengineer.com
 [ ] https://blog.pragmaticengineer.com/distributed-architecture-concepts-i-have-learned-while-building-payments-systems/
@@ -47,4 +49,8 @@ III Blogs
 IV Refreshements SO Videos
 
 [ ] https://www.youtube.com/watch?v=X48VuDVv0do
+
+V List of companies in Amsterdam
+
+https://techpays.eu/europe/netherlands/amsterdam#
 
