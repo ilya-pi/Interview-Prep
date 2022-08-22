@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -19,81 +18,72 @@ import (
  *  2. INTEGER d
  */
 
+type tracker [201]int32
+
+func (e *tracker) spend(v int32) {
+	if v <= 200 {
+		(*e)[v]++
+	}
+}
+
+func (e *tracker) unSpend(v int32) {
+	if (*e)[v] > 0 {
+		(*e)[v]--
+	}
+}
+
+// This was painful to write
+func (e *tracker) medianX2(d int32) int32 {
+	if d%2 == 1 {
+		// We need to find d / 2 + 1 - the element
+		i := 0
+		for k := int32(0); k < d/2+1; k, i = k+(*e)[i], i+1 {
+		}
+		i--
+		return int32(2 * i)
+	} else {
+		// We need to find d / 2 and d / 2 + 1 elements
+		i := 0
+		k := int32(0)
+		for ; k < d/2; k, i = k+(*e)[i], i+1 {
+		}
+		i--
+		//fmt.Printf("i is %v\n", i)
+		//fmt.Printf("e is %v\n", e)
+		// now k >= d / 2
+		if k == d/2 {
+			j := i + 1
+			for ; (*e)[j] == 0; j++ {
+			}
+			return int32(i + j)
+		} else {
+			return int32(2 * i)
+		}
+	}
+}
+
 func activityNotifications(expenditure []int32, d int32) int32 {
-	if int32(len(expenditure)) < d {
-		return 0
+	e := &tracker{}
+	for i := 0; i < int(d); i++ {
+		e.spend(expenditure[i])
 	}
 
-	spent := make([]int32, d)
-	copy(spent, expenditure[:d])
-	sort.Slice(spent, func(i, j int) bool { return spent[i] < spent[j] })
-
-	doubleMean := func(arr []int32) int32 {
-		if len(arr)%2 == 1 {
-			return 2 * arr[len(arr)/2]
-		} else {
-			return arr[len(arr)/2] + arr[len(arr)/2-1]
+	var r int32
+	for i := int(d); i < len(expenditure); i++ {
+		if e.medianX2(d) <= expenditure[i] {
+			r++
 		}
+		e.unSpend(expenditure[i-int(d)])
+		e.spend(expenditure[i])
 	}
-
-	var bs func([]int32, int32) int32
-	bs = func(arr []int32, v int32) int32 {
-		if len(arr) == 1 {
-			if arr[0] == v {
-				return 0
-			} else {
-				// Factually can't happen
-				return -1
-			}
-		}
-
-		if v < arr[len(arr)/2] {
-			return bs(arr[:len(arr)/2], v)
-		} else {
-			return int32(len(arr)/2) + bs(arr[len(arr)/2:], v)
-		}
-	}
-
-	var res int32
-	for i := d; i < int32(len(expenditure)); i++ {
-		fmt.Sprintf("%d\n", i)
-		if expenditure[i] >= doubleMean(spent) {
-			res++
-		}
-		// bs element, change for new one and bubble it in place
-		j := bs(spent, expenditure[i-d])
-		// fmt.Printf("j is %d\n", j)
-		// replace that element
-		spent[j] = expenditure[i]
-		// bubble it now
-	bubble_loop:
-		for {
-			switch {
-			case j == 0 && spent[j] <= spent[j+1]:
-				break bubble_loop
-			case j == int32(len(spent)-1) && spent[j-1] <= spent[j]:
-				break bubble_loop
-			case j < int32(len(spent))-1 && spent[j] > spent[j+1]:
-				spent[j], spent[j+1] = spent[j+1], spent[j]
-				j++
-			case j > 0 && spent[j] < spent[j-1]:
-				spent[j], spent[j-1] = spent[j-1], spent[j]
-				j--
-			default:
-				break bubble_loop
-			}
-		}
-	}
-
-	return res
+	return r
 }
 
 func main() {
 	reader := bufio.NewReaderSize(os.Stdin, 16*1024*1024)
 
-	//stdout, err := os.Create(os.Getenv("OUTPUT_PATH"))
-	//checkError(err)
-	stdout := os.Stdout
+	stdout, err := os.Create(os.Getenv("OUTPUT_PATH"))
+	checkError(err)
 
 	defer stdout.Close()
 
