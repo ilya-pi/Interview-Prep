@@ -43,6 +43,47 @@ func (t *Tree12) numPaths(v int) int {
 	return countSums(t, v, nil)
 }
 
+func (t *Tree12) numPaths2(ts int) int {
+	/*
+		Approach: pre-order walk through tree with visit == +1
+		and add to the available sums, on pop from stack we need
+		to repair available sums
+
+		On each node:
+		1) Add to the sum of previous node
+		2) Check current sum if we have new paths matching to desired sum and add it if necessary
+		3) Continue to left and right node
+		4) Remove current sum from map
+	*/
+
+	sums := map[int]int{} // the amount of nodes that sum up to key in the current tree path
+	var res int
+	// Root node's parent
+	sums[0] = 1
+
+	var preOrder func(*Tree12, int)
+	preOrder = func(n *Tree12, sum int) {
+		if n == nil {
+			return
+		}
+		// 1 Add to the sum of previous node
+		curSum := sum + n.v
+		sums[curSum]++
+		// 2 Check current sum if we have new paths matching to desired sum and add it if necessary
+		if amount, ok := sums[curSum-ts]; ok {
+			res += amount
+		}
+		// 3 Continue left and right
+		preOrder(n.left, curSum)
+		preOrder(n.right, curSum)
+		// 4 Remove current sum from map lookup
+		sums[curSum]--
+	}
+	preOrder(t, 0)
+
+	return res
+}
+
 func main() {
 	t := &Tree12{v: 1}
 	t1 := &Tree12{v: 2}
@@ -54,5 +95,6 @@ func main() {
 	t.left, t.right = t1, t2
 	t1.left, t1.right = t3, t4
 	t2.left, t2.right = t5, t6
-	fmt.Printf("Got %v ways to make %v", t.numPaths(7), 7)
+	fmt.Printf("Got %v ways to make %v\n", t.numPaths(7), 7)
+	fmt.Printf("Got %v ways to make %v\n", t.numPaths2(7), 7)
 }
