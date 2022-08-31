@@ -34,7 +34,7 @@ func bitToWin(v int32) int32 {
 				longest = length
 			}
 			flipped = false
-			start := lastFlipped
+			start := lastFlipped - 1
 			length = start - i
 		}
 	}
