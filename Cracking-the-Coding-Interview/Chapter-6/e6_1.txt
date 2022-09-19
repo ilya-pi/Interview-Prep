@@ -1,0 +1,8 @@
+Ans:
+
+Encode the number of the bottle with the amount of pills in 2^number of the bottle.
+
+So we will get the binary number 111111111111111111111. 
+
+Once we get the measurment, the number of the bottle would be (r-2^21-1)*10, since the different pill is 1.1 gram instead of 1.0.
+
