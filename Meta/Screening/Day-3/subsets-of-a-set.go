@@ -22,6 +22,7 @@ func subsets(arr []int) [][]int {
 	}
 
 	// O(2^n-1 + 2^n-2 + .. ) == O(2^n)
+	// space - 2^n-1 * n + 2^n * n = 2^n * n
 	return ans
 }
 
@@ -49,6 +50,7 @@ func subsets2(arr []int) [][]int {
 		subs(r, arr, ind+1)
 	}
 	// O(2^n) :-/
+	// space - 2^n * n
 
 	subs(nil, arr, 0)
 	return acc
