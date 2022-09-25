@@ -1,0 +1,13 @@
+
+1. O(b)
+2. Time O(b) space O(b)
+3. O(1)
+4. O(a/b)
+5. O(logn)
+6. O(sqrt(n))
+7. O(n)
+8. O(n)
+9. 1 + 2 + 3 + 4 .. + n = n^2 - 1 == O(n^2)
+10. O(logn)
+11. isInOrder == O(k) amount of strings 26^k * (k + k) + * 26 ^ k == O(k * 26^k) time and O(26^k) space
+12. blogb + a*logb
